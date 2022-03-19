@@ -1,0 +1,53 @@
+definitions:
+  dto.UserDto:
+    properties:
+      password:
+        type: string
+      username:
+        type: string
+    type: object
+info:
+  contact:
+    email: support@swagger.io
+    name: API Support
+    url: http://www.swagger.io/support
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+paths:
+  /user:
+    post:
+      consumes:
+      - application/json
+      description: Create User
+      parameters:
+      - description: User
+        in: body
+        name: dto.UserDto
+        required: true
+        schema:
+          $ref: '#/definitions/dto.UserDto'
+      produces:
+      - application/json
+      responses: {}
+      summary: Create an User
+      tags:
+      - user
+  /user/{id}:
+    get:
+      consumes:
+      - application/json
+      description: get User By Id
+      parameters:
+      - description: User ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses: {}
+      summary: Show an User
+      tags:
+      - user
+swagger: "2.0"
