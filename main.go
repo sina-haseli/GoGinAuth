@@ -2,17 +2,16 @@ package main
 
 import (
 	"github.com/gin-gonic/gin"
+	swaggerFiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
 	"golang.com/m/controller"
+	"golang.com/m/docs"
 	"golang.com/m/repository"
 	"golang.com/m/service"
-	"github.com/swaggo/files"
-	"github.com/swaggo/gin-swagger"
-	"golang.com/m/docs"
-	
 )
 
 var (
-	userService service.UserService = service.NewUserService(userRepository)
+	userService    service.UserService       = service.NewUserService(userRepository)
 	userController controller.UserController = controller.NewUserController(userService)
 	userRepository repository.UserRepository = repository.NewUserRepository()
 )
@@ -23,7 +22,7 @@ var (
 
 // @license.name  Apache 2.0
 // @license.url   http://www.apache.org/licenses/LICENSE-2.0.html
-func main()  {
+func main() {
 
 	docs.SwaggerInfo.Title = "Swagger Example API"
 	docs.SwaggerInfo.Description = "This is a sample server."
@@ -37,15 +36,15 @@ func main()  {
 	v1 := r.Group("/api/v1")
 	{
 		accounts := v1.Group("/user")
-		{
-			accounts.GET("/:id", func(c *gin.Context) {
-		c.JSON(200, userController.GetAllUsers(c))
+
+		accounts.GET("/:id", func(c *gin.Context) {
+			c.JSON(200, userController.GetAllUsers(c))
 		})
-			accounts.POST("", func(ctx *gin.Context) {
-		ctx.JSON(200, userController.CreateUser(ctx))
+		accounts.POST("", func(ctx *gin.Context) {
+			ctx.JSON(200, userController.CreateUser(ctx))
 		})
-		}
-    //...
+
+		//...
 	}
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 	r.Run(":8080")
