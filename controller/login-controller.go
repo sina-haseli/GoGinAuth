@@ -2,6 +2,7 @@ package controller
 
 import (
 	"github.com/gin-gonic/gin"
+	"golang.com/m/dto"
 	"golang.com/m/service"
 )
 
@@ -18,7 +19,11 @@ func NewLoginController(jwtService service.JWTService) LoginController {
 }
 
 func (l *loginController) Login(ctx *gin.Context) string {
-	username := ctx.PostForm("username")
-	token := l.jwtService.GenerateToken(username)
+	var credentials dto.CredentialsDto
+	username := ctx.ShouldBindJSON(&credentials)
+	if username!= nil {
+		panic(username)
+	}
+	token := l.jwtService.GenerateToken(credentials.Username)
 	return token
 }

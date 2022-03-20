@@ -15,6 +15,9 @@ var (
 	userService service.UserService = service.NewUserService(userRepository)
 	userController controller.UserController = controller.NewUserController(userService)
 	userRepository repository.UserRepository = repository.NewUserRepository()
+	jwtService service.JWTService = service.NewJWTService()
+
+	loginController controller.LoginController = controller.NewLoginController(jwtService)
 )
 
 // @contact.name   API Support
@@ -33,6 +36,20 @@ func main()  {
 	docs.SwaggerInfo.Schemes = []string{"http", "https"}
 
 	r := gin.Default()
+
+	r.POST("/login", func(ctx *gin.Context) {
+		token := loginController.Login(ctx)
+
+		if token != "" {
+			ctx.JSON(200, gin.H{
+				"token": token,
+			})
+		} else {
+			ctx.JSON(401, gin.H{
+				"message": "unauthorized",
+			})
+		}
+	})
 
 	v1 := r.Group("/api/v1")
 	{
